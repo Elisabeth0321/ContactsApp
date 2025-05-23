@@ -19,8 +19,8 @@ public class ContactsHelper {
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
         Cursor cursor = cr.query(uri, null, null, null, null);
 
-        if (cursor != null && cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
                 String id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
                 String photoUri = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.PHOTO_URI));
@@ -40,13 +40,15 @@ public class ContactsHelper {
                             String phoneNumber = phoneCursor.getString(
                                     phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
                             );
-                            contacts.add(new Contact(name, phoneNumber, photoUri));
-                            break; //только 1 номер
+                            if (phoneNumber != null && !phoneNumber.trim().isEmpty()) {
+                                contacts.add(new Contact(name, phoneNumber, photoUri));
+                                break; // только один номер
+                            }
                         }
                         phoneCursor.close();
                     }
                 }
-            }
+            } while (cursor.moveToNext());
             cursor.close();
         }
 
