@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id 'io.freefair.lombok' version '8.4'
 }
 
 android {
@@ -29,12 +30,23 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation libs.glide
+    implementation libs.ext.junit
+    implementation libs.espresso.core
+    implementation libs.rules
+    implementation libs.espresso.contrib
+    annotationProcessor libs.compiler
+
+    compileOnly libs.org.projectlombok.lombok
+    annotationProcessor libs.org.projectlombok.lombok
 
     implementation libs.appcompat
     implementation libs.material
+
     testImplementation libs.junit
+    testImplementation libs.mockito.core
+
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.mockito.android
 }

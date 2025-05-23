@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.lizaveta.contactsapp.R;
 import com.lizaveta.contactsapp.model.Contact;
+import com.lizaveta.contactsapp.utils.StringUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -22,7 +23,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     private final List<Contact> contactList;
     private final Context context;
-    private final OnContactClickListener listener;
+    final OnContactClickListener listener;
 
     public ContactsAdapter(List<Contact> contacts, Context context, OnContactClickListener listener) {
         this.contactList = contacts;
@@ -40,19 +41,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contact contact = contactList.get(position);
-        holder.textName.setText(contact.name);
-        holder.textPhone.setText(contact.phone);
+        holder.textName.setText(contact.getName());
+        holder.textPhone.setText(contact.getPhone());
 
-        if (contact.photoUri != null) {
+        if (contact.getPhotoUri() != null) {
             holder.textInitials.setVisibility(View.GONE);
             Glide.with(context)
-                    .load(Uri.parse(contact.photoUri))
+                    .load(Uri.parse(contact.getPhotoUri()))
                     .circleCrop()
                     .into(holder.imageView);
         } else {
             holder.textInitials.setVisibility(View.VISIBLE);
             holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.circle_bg));
-            holder.textInitials.setText(getInitials(contact.name));
+            holder.textInitials.setText(StringUtils.getInitials(contact.getName()));
         }
         holder.itemView.setOnClickListener(v -> listener.onContactClick(contact));
     }
@@ -62,17 +63,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         return contactList.size();
     }
 
-    private String getInitials(String name) {
-        String[] parts = name.trim().split(" ");
-        if (parts.length >= 2) {
-            return ("" + parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
-        } else if (parts.length == 1 && !parts[0].isEmpty()) {
-            return ("" + parts[0].charAt(0)).toUpperCase();
-        }
-        return "?";
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textPhone;
         ImageView imageView;
         TextView textInitials;

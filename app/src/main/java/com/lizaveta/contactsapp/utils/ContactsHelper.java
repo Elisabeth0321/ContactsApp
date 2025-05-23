@@ -9,7 +9,6 @@ import android.provider.ContactsContract;
 import com.lizaveta.contactsapp.model.Contact;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class ContactsHelper {
@@ -51,7 +50,7 @@ public class ContactsHelper {
             cursor.close();
         }
 
-        Collections.sort(contacts, Comparator.comparing(c -> c.name.toLowerCase()));
+        contacts.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
 
         return contacts;
     }

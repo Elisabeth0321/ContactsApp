@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadContacts() {
         contacts = ContactsHelper.loadContacts(this);
-        adapter = new ContactsAdapter(contacts, this, contact -> makeCall(contact.phone));
+        adapter = new ContactsAdapter(contacts, this, contact -> makeCall(contact.getPhone()));
         recyclerView.setAdapter(adapter);
     }
 
